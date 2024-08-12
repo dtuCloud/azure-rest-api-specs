@@ -5,7 +5,7 @@ import "@azure-tools/typespec-azure-core";
 using TypeSpec.Rest;
 using TypeSpec.Http;
 
-namespace KeyVaultClient;
+namespace KeyVault;
 
 /**
  * The role definition type.
@@ -275,12 +275,14 @@ model FullBackupOperation {
   /**
    * The start time of the backup operation in UTC
    */
-  startTime?: plainTime;
+  @encode("unixTimestamp", int32)
+  startTime?: utcDateTime;
 
   /**
    * The end time of the backup operation in UTC
    */
-  endTime?: plainTime;
+  @encode("unixTimestamp", int32)
+  endTime?: utcDateTime;
 
   /**
    * Identifier for the full backup operation.
@@ -384,12 +386,14 @@ model RestoreOperation {
   /**
    * The start time of the restore operation
    */
-  startTime?: plainTime;
+  @encode("unixTimestamp", int32)
+  startTime?: utcDateTime;
 
   /**
    * The end time of the restore operation
    */
-  endTime?: plainTime;
+  @encode("unixTimestamp", int32)
+  endTime?: utcDateTime;
 }
 
 model RestoreOperationParameters {
@@ -437,12 +441,14 @@ model SelectiveKeyRestoreOperation {
   /**
    * The start time of the restore operation
    */
-  startTime?: plainTime;
+  @encode("unixTimestamp", int32)
+  startTime?: utcDateTime;
 
   /**
    * The end time of the restore operation
    */
-  endTime?: plainTime;
+  @encode("unixTimestamp", int32)
+  endTime?: utcDateTime;
 }
 
 /**
@@ -635,10 +641,16 @@ model UpdateSettingRequest {
   value: string;
 }
 
+/**
+ * A Key Vault account setting.
+ */
+@resource("/settings")
 model Setting {
   /**
    * The account setting to be updated
    */
+  @key
+  @visibility("read")
   name: string;
 
   /**
@@ -677,25 +689,29 @@ model Attributes {
    * Not before date in UTC.
    */
   @encodedName("application/json", "nbf")
-  notBefore?: plainTime;
+  @encode("unixTimestamp", int32)
+  notBefore?: utcDateTime;
 
   /**
    * Expiry date in UTC.
    */
   @encodedName("application/json", "exp")
-  expires?: plainTime;
+  @encode("unixTimestamp", int32)
+  expires?: utcDateTime;
 
   /**
    * Creation time in UTC.
    */
   @visibility("read")
-  created?: plainTime;
+  @encode("unixTimestamp", int32)
+  created?: utcDateTime;
 
   /**
    * Last updated time in UTC.
    */
   @visibility("read")
-  updated?: plainTime;
+  @encode("unixTimestamp", int32)
+  updated?: utcDateTime;
 }
 
 /**
