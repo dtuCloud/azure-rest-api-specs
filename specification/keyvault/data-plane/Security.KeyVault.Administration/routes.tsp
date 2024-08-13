@@ -1,10 +1,12 @@
 import "@azure-tools/typespec-azure-core";
+import "@azure-tools/typespec-client-generator-core";
 import "@typespec/rest";
 import "./models.tsp";
 
 using TypeSpec.Rest;
 using TypeSpec.Http;
 using Azure.Core;
+using Azure.ClientGenerator.Core;
 
 namespace KeyVault;
 
@@ -144,19 +146,22 @@ op selectiveKeyRestoreOperation is Azure.Core.Foundations.Operation<
 /**
  * Description of the pool setting to be updated
  */
+#suppress "@azure-tools/typespec-azure-core/use-standard-operations" "Foundations.Operation is necessary for Key Vault"
 @summary("""
   Updates key vault account setting, stores it, then returns the setting name and
   value to the client.
   """)
-op updateSetting is KeyVaultOperations.ResourceUpdate<
-  Setting,
+op updateSetting is Azure.Core.Foundations.Operation<
   {
     /**
      * The parameters to update an account setting.
      */
+    #suppress "deprecated" "Property flattening is supported for legacy scenarios like Key Vault's"
     @body
+    @flattenProperty
     parameters: UpdateSettingRequest;
-  }
+  },
+  Setting
 >;
 
 /**
